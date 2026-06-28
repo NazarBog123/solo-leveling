@@ -1,8 +1,36 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { fetchQuests, markQuestCompleted, runDailyResetIfNeeded } from '@/services/questService'
 import type { Quest } from '@/types'
 
 type Status = 'initializing' | 'loading' | 'idle' | 'completing' | 'error'
+
+function pickTrack(playlist: { link: string; chance: number }[], lastLink?: string): string {
+	const defaultChance = 100 / playlist.filter((t) => t.chance === 0).length
+
+	const weighted = playlist.map((t) => ({
+		link: t.link,
+		weight: t.chance === 0 ? defaultChance : t.chance,
+	}))
+
+	const total = weighted.reduce((sum, t) => sum + t.weight, 0)
+
+	let attempts = 0
+	while (attempts < 10) {
+		const rand = Math.random() * total
+		let cumulative = 0
+		for (const t of weighted) {
+			cumulative += t.weight
+			if (rand <= cumulative) {
+				if (t.link !== lastLink) return t.link
+				break
+			}
+		}
+		attempts++
+	}
+
+	// fallback: return anything that isn't the last track
+	return weighted.find((t) => t.link !== lastLink)?.link ?? weighted[0].link
+}
 
 export function Home() {
 	const [quests, setQuests] = useState<Quest[]>([])
@@ -56,14 +84,65 @@ export function Home() {
 	const allDone = totalCount > 0 && completedCount === totalCount
 	const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0
 
+	const playlist = [
+		{ link: '/music/dark-aria.mp3', chance: 5 },
+		{ link: '/music/level.mp3', chance: 5 },
+		{ link: '/music/reawaker.mp3', chance: 5 },
+		{ link: '/music/request.mp3', chance: 5 },
+		{ link: '/music/reviver.mp3', chance: 5 },
+		{ link: '/music/shadowborn.mp3', chance: 5 },
+		// { link: '/music/un-apex.mp3', chance: 1 },
+		{ link: '/music/suite-1.mp3', chance: 0 },
+		{ link: '/music/suite-2.mp3', chance: 0 },
+		{ link: '/music/suite-3.mp3', chance: 0 },
+		{ link: '/music/suite-4.mp3', chance: 0 },
+		{ link: '/music/suite-5.mp3', chance: 0 },
+		{ link: '/music/suite-6.mp3', chance: 0 },
+		{ link: '/music/suite-7.mp3', chance: 0 },
+		{ link: '/music/suite-8.mp3', chance: 1 },
+		{ link: '/music/suite-9.mp3', chance: 0 },
+		{ link: '/music/suite-10.mp3', chance: 0 },
+		{ link: '/music/suite-11-dungeon.mp3', chance: 0 },
+		{ link: '/music/suite-12-ksk-gate.mp3', chance: 0 },
+		{ link: '/music/suite-13-hunter-monster.mp3', chance: 0 },
+		{ link: '/music/suite-14-am-km.mp3', chance: 0 },
+		{ link: '/music/suite-15-everyday-lv0.mp3', chance: 0 },
+		{ link: '/music/suite-16-aikari.mp3', chance: 0 },
+		{ link: '/music/suite-17-onlyore.mp3', chance: 0 },
+	]
+
+	const audioRef = useRef<HTMLAudioElement | null>(null)
+	const currentTrackRef = useRef<string | undefined>(undefined)
+
+	const playNext = useCallback(() => {
+		const track = pickTrack(playlist, currentTrackRef.current)
+		currentTrackRef.current = track
+		if (audioRef.current) {
+			audioRef.current.volume = 0.1
+			audioRef.current.src = track
+			console.log(track)
+			audioRef.current.play().catch(console.error)
+		}
+	}, [])
+
 	return (
 		<main className='app-main'>
 			<div className='app-container'>
 				{showIntro && (
 					<div className='intro-overlay'>
-						<video className='intro-video' src='/video-startup.mp4' autoPlay playsInline onEnded={() => setShowIntro(false)} />
+						<video
+							className='intro-video'
+							src='/video-startup.mp4'
+							autoPlay
+							playsInline
+							onEnded={() => {
+								setShowIntro(false)
+								playNext()
+							}}
+						/>
 					</div>
 				)}
+				<audio ref={audioRef} onEnded={playNext} />
 				<div className='page-header'>
 					<h1 className='page-title'>Daily Quests</h1>
 					{status !== 'initializing' && totalCount > 0 && (
