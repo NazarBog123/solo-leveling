@@ -61,7 +61,17 @@ export function Home() {
 			<div className='app-container'>
 				{showIntro && (
 					<div className='intro-overlay'>
-						<video className='intro-video' src='/video-startup.mov' autoPlay playsInline onEnded={() => setShowIntro(false)} />
+						<video
+							className='intro-video'
+							src='/video-startup.mov'
+							autoPlay
+							playsInline
+							muted={false}
+							ref={(el) => {
+								if (el) el.play().catch(console.error)
+							}}
+							onEnded={() => setShowIntro(false)}
+						/>
 					</div>
 				)}
 				<div className='page-header'>
@@ -137,6 +147,18 @@ export function Home() {
 						<p>No quests found.</p>
 					</div>
 				)}
+
+				<video
+					className='intro-video'
+					src='/video-startup.mov'
+					autoPlay
+					loop
+					playsInline
+					muted={false}
+					ref={(el) => {
+						if (el) el.play().catch(console.error)
+					}}
+				/>
 			</div>
 		</main>
 	)
