@@ -1,18 +1,17 @@
-const { BrowserWindow, app } = require('electron')
+const { app, BrowserWindow } = require('electron')
+const path = require('path')
 
 function createWindow() {
 	const win = new BrowserWindow({
-		width: 1200,
-		height: 800,
+		frame: false,
+		show: true,
+		icon: path.join(__dirname, 'favicon.ico'),
 	})
 
 	win.loadURL('https://solo-leveling-tensai.vercel.app')
+
+	win.maximize() // fills screen but keeps OS behavior
+	return win
 }
 
 app.whenReady().then(createWindow)
-
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit()
-	}
-})
