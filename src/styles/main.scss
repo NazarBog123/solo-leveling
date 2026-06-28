@@ -1,0 +1,295 @@
+// ── Reset ────────────────────────────────────────────────────────────────────
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #f1f1f3;
+  background-color: #0f0f11;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+input, button, textarea, select { font: inherit; }
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { cursor: pointer; border: none; background: none; }
+
+#root { min-height: 100vh; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ── App ──────────────────────────────────────────────────────────────────────
+
+.app-main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background-color: #0f0f11;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 560px;
+}
+
+// ── Page header ───────────────────────────────────────────────────────────────
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #f1f1f3;
+}
+
+.page-counter {
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: #8b8b99;
+}
+
+// ── Progress bar ─────────────────────────────────────────────────────────────
+
+.progress-track {
+  height: 3px;
+  background-color: #1a1a1f;
+  border-radius: 9999px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #6366f1;
+  border-radius: 9999px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-fill-done {
+  background-color: #22c55e;
+}
+
+// ── Quest list ────────────────────────────────────────────────────────────────
+
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quest-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background-color: #1a1a1f;
+  border: 1px solid #2a2a32;
+  border-radius: 12px;
+  transition: border-color 150ms ease, opacity 150ms ease;
+}
+
+.quest-item:not(.quest-item-completed):hover {
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.quest-item-completed {
+  opacity: 0.45;
+}
+
+.quest-item-completing {
+  opacity: 0.7;
+}
+
+.quest-item-completed .quest-text {
+  text-decoration: line-through;
+  color: #8b8b99;
+}
+
+// ── Checkbox ──────────────────────────────────────────────────────────────────
+
+.checkbox-btn {
+  flex-shrink: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.checkbox-btn:disabled {
+  cursor: default;
+}
+
+.checkbox-btn:focus-visible .checkbox-box {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.checkbox-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #2a2a32;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #fff;
+  transition: all 150ms ease;
+}
+
+.checkbox-btn:not(:disabled):hover .checkbox-box {
+  border-color: #6366f1;
+  background-color: rgba(99, 102, 241, 0.12);
+}
+
+.checkbox-box-checked {
+  border-color: #22c55e;
+  background-color: #22c55e;
+}
+
+// ── Quest info ────────────────────────────────────────────────────────────────
+
+.quest-info {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex: 1;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.quest-text {
+  font-size: 1rem;
+  color: #f1f1f3;
+  font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: color 150ms ease;
+}
+
+.quest-amount {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: #8b8b99;
+  background-color: rgba(42, 42, 50, 0.5);
+  padding: 2px 0.5rem;
+  border-radius: 4px;
+}
+
+// ── All done ──────────────────────────────────────────────────────────────────
+
+.all-done {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 12px;
+  background-color: rgba(34, 197, 94, 0.05);
+}
+
+.all-done-icon {
+  font-size: 1rem;
+  color: #22c55e;
+  animation: pulse 2s ease infinite;
+}
+
+.all-done-text {
+  color: #22c55e;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+// ── States ────────────────────────────────────────────────────────────────────
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 0;
+  font-size: 0.875rem;
+  color: #8b8b99;
+}
+
+.state-error {
+  color: #f87171;
+}
+
+.retry-btn {
+  font-size: 0.875rem;
+  color: #6366f1;
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.retry-btn:hover {
+  color: #4f46e5;
+}
+
+// ── Spinners ──────────────────────────────────────────────────────────────────
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #2a2a32;
+  border-top-color: #6366f1;
+  border-radius: 9999px;
+  animation: spin 0.7s linear infinite;
+}
+
+.mini-spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid #2a2a32;
+  border-top-color: #8b8b99;
+  border-radius: 9999px;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
