@@ -11,6 +11,7 @@ function createWindow() {
 	win.loadURL('https://solo-leveling-tensai.vercel.app')
 
 	win.maximize() // fills screen but keeps OS behavior
+	win.setFullScreen(true)
 	return win
 }
 
