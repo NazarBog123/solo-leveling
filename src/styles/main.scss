@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+$color-red: #c11f46;
+$color-white: #edf4fc;
+$color-green-check: #18dd99;
+
 // ── Reset ────────────────────────────────────────────────────────────────────
 
 *,
@@ -14,14 +20,10 @@ html {
 }
 
 body {
-	font-family:
-		system-ui,
-		-apple-system,
-		sans-serif;
+	font-family: 'Lato', sans-serif;
 	font-size: 1rem;
-	line-height: 1.6;
+	line-height: 1.6em;
 	color: #f1f1f3;
-	background-color: #0f0f11;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -46,6 +48,7 @@ h3,
 h4,
 h5,
 h6 {
+	text-transform: uppercase;
 	overflow-wrap: break-word;
 }
 a {
@@ -82,11 +85,30 @@ button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 1.5rem 1rem;
-	background-color: #0f0f11;
+	background-color: #02080f;
+}
+
+.bg {
+	position: absolute;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+	padding: 50px 10px 80px;
+
+	video {
+		// width: 100%;
+		height: 100%;
+		// object-fit: cover;
+	}
 }
 
 .app-container {
+	position: relative;
+	z-index: 5;
+	padding: 20px;
 	width: 100%;
 	max-width: 560px;
 }
@@ -96,42 +118,25 @@ button {
 .page-header {
 	display: flex;
 	align-items: baseline;
-	justify-content: space-between;
-	margin-bottom: 1.25rem;
+	justify-content: center;
+	margin-bottom: 90px;
 }
 
 .page-title {
-	font-size: 1.5rem;
+	position: relative;
+	font-size: 42px;
 	font-weight: 700;
-	letter-spacing: -0.04em;
-	color: #f1f1f3;
-}
+	letter-spacing: 0.2em;
+	color: #eef2f6;
+	text-shadow:
+		0 0 4px #eef2f6,
+		0 0 12px #c0e8ff,
+		0 0 28px #7ec8f8,
+		0 0 55px #3fa9f5,
+		0 0 90px #1a7fd4;
 
-.page-counter {
-	font-size: 0.875rem;
-	font-family: 'JetBrains Mono', 'Fira Code', monospace;
-	color: #8b8b99;
-}
-
-// ── Progress bar ─────────────────────────────────────────────────────────────
-
-.progress-track {
-	height: 3px;
-	background-color: #1a1a1f;
-	border-radius: 9999px;
-	margin-bottom: 2rem;
-	overflow: hidden;
-}
-
-.progress-fill {
-	height: 100%;
-	background-color: #6366f1;
-	border-radius: 9999px;
-	transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.progress-fill-done {
-	background-color: #22c55e;
+	// ! very interesting look up into this effect later, it's called chromatic-aberration
+	// filter: drop-shadow(-2px 0 rgba(255, 0, 0, 0.6)) drop-shadow(2px 0 rgba(0, 150, 255, 0.6));
 }
 
 // ── Quest list ────────────────────────────────────────────────────────────────
@@ -139,37 +144,17 @@ button {
 .quest-list {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
+	gap: 26px;
 }
 
 .quest-item {
 	display: flex;
 	align-items: center;
 	gap: 1rem;
-	padding: 1rem 1.25rem;
-	background-color: #1a1a1f;
-	border: 1px solid #2a2a32;
 	border-radius: 12px;
 	transition:
 		border-color 150ms ease,
 		opacity 150ms ease;
-}
-
-.quest-item:not(.quest-item-completed):hover {
-	border-color: rgba(99, 102, 241, 0.4);
-}
-
-.quest-item-completed {
-	opacity: 0.45;
-}
-
-.quest-item-completing {
-	opacity: 0.7;
-}
-
-.quest-item-completed .quest-text {
-	text-decoration: line-through;
-	color: #8b8b99;
 }
 
 // ── Checkbox ──────────────────────────────────────────────────────────────────
@@ -234,110 +219,6 @@ button {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	transition: color 150ms ease;
-}
-
-.quest-amount {
-	flex-shrink: 0;
-	font-size: 0.75rem;
-	font-family: 'JetBrains Mono', 'Fira Code', monospace;
-	color: #8b8b99;
-	background-color: rgba(42, 42, 50, 0.5);
-	padding: 2px 0.5rem;
-	border-radius: 4px;
-}
-
-// ── All done ──────────────────────────────────────────────────────────────────
-
-.all-done {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 0.75rem;
-	margin-top: 2rem;
-	padding: 1rem 1.5rem;
-	border: 1px solid rgba(34, 197, 94, 0.25);
-	border-radius: 12px;
-	background-color: rgba(34, 197, 94, 0.05);
-}
-
-.all-done-icon {
-	font-size: 1rem;
-	color: #22c55e;
-	animation: pulse 2s ease infinite;
-}
-
-.all-done-text {
-	color: #22c55e;
-	font-size: 0.875rem;
-	font-weight: 500;
-	line-height: 1;
-}
-
-// ── States ────────────────────────────────────────────────────────────────────
-
-.state {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 1rem;
-	padding: 4rem 0;
-	font-size: 0.875rem;
-	color: #8b8b99;
-}
-
-.state-error {
-	color: #f87171;
-}
-
-.retry-btn {
-	font-size: 0.875rem;
-	color: #6366f1;
-	text-decoration: underline;
-	cursor: pointer;
-	background: none;
-	border: none;
-}
-
-.retry-btn:hover {
-	color: #4f46e5;
-}
-
-// ── Spinners ──────────────────────────────────────────────────────────────────
-
-.spinner {
-	width: 28px;
-	height: 28px;
-	border: 2px solid #2a2a32;
-	border-top-color: #6366f1;
-	border-radius: 9999px;
-	animation: spin 0.7s linear infinite;
-}
-
-.mini-spinner {
-	display: inline-block;
-	width: 10px;
-	height: 10px;
-	border: 1.5px solid #2a2a32;
-	border-top-color: #8b8b99;
-	border-radius: 9999px;
-	animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-@keyframes pulse {
-	0%,
-	100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0.4;
-	}
 }
 
 // ── intro ──────────────────────────────────────────────────────────────────

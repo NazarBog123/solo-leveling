@@ -35,19 +35,61 @@ function pickTrack(playlist: { link: string; chance: number }[], lastLink?: stri
 export function Home() {
 	const [quests, setQuests] = useState<Quest[]>([])
 	const [status, setStatus] = useState<Status>('initializing')
-	const [error, setError] = useState<string | null>(null)
 	const [completingId, setCompletingId] = useState<number | null>(null)
 	const [showIntro, setShowIntro] = useState(true)
+	const introRef = useRef<HTMLVideoElement | null>(null)
+
+	const bgFirstPartVideoRef = useRef<HTMLVideoElement | null>(null)
+	const bgSecondPartVideoRef = useRef<HTMLVideoElement | null>(null)
+	const bgFirstPartAudioRef = useRef<HTMLAudioElement | null>(null)
+	const [bgPart, setBgPart] = useState<'none' | 'first' | 'second'>('none')
+
+	const handleIntroEnd = async () => {
+		setShowIntro(false)
+
+		setBgPart('first')
+
+		const video = bgFirstPartVideoRef.current
+		const audio = bgFirstPartAudioRef.current
+
+		if (video && audio) {
+			video.currentTime = 0
+			audio.currentTime = 0
+
+			video.volume = 0
+			audio.volume = 0.5
+
+			try {
+				await Promise.all([video.play(), audio.play()])
+			} catch (e) {
+				console.error(e)
+			}
+		}
+	}
+
+	const handleBgPart1End = async () => {
+		const video = bgSecondPartVideoRef.current
+		setBgPart('second')
+		if (video) {
+			video.currentTime = 0
+			try {
+				await video.play()
+			} catch (e) {
+				console.error(e)
+			}
+		}
+
+		// start music ONLY here (important: single trigger point)
+		playNext()
+	}
 
 	const loadQuests = useCallback(async () => {
 		setStatus('loading')
-		setError(null)
 		try {
 			const data = await fetchQuests()
 			setQuests(data)
 			setStatus('idle')
 		} catch {
-			setError('Failed to load quests.')
 			setStatus('error')
 		}
 	}, [])
@@ -64,6 +106,12 @@ export function Home() {
 		init()
 	}, [loadQuests])
 
+	useEffect(() => {
+		if (introRef.current) {
+			introRef.current.volume = 0.3 // 0.0 → 1.0
+		}
+	}, [])
+
 	const handleComplete = async (quest: Quest) => {
 		if (quest.completed || completingId !== null) return
 		setCompletingId(quest.id)
@@ -72,25 +120,19 @@ export function Home() {
 			await markQuestCompleted(quest.id)
 			setQuests((prev) => prev.map((q) => (q.id === quest.id ? { ...q, completed: true } : q)))
 		} catch {
-			setError('Failed to update quest.')
 		} finally {
 			setCompletingId(null)
 			setStatus('idle')
 		}
 	}
 
-	const completedCount = quests.filter((q) => q.completed).length
-	const totalCount = quests.length
-	const allDone = totalCount > 0 && completedCount === totalCount
-	const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0
-
 	const playlist = [
-		{ link: '/music/dark-aria.mp3', chance: 5 },
-		{ link: '/music/level.mp3', chance: 5 },
-		{ link: '/music/reawaker.mp3', chance: 5 },
-		{ link: '/music/request.mp3', chance: 5 },
-		{ link: '/music/reviver.mp3', chance: 5 },
-		{ link: '/music/shadowborn.mp3', chance: 5 },
+		{ link: '/music/dark-aria.mp3', chance: 3.5 },
+		{ link: '/music/level.mp3', chance: 3.5 },
+		{ link: '/music/reawaker.mp3', chance: 3.5 },
+		{ link: '/music/request.mp3', chance: 3.5 },
+		{ link: '/music/reviver.mp3', chance: 3.5 },
+		{ link: '/music/shadowborn.mp3', chance: 3.5 },
 		// { link: '/music/un-apex.mp3', chance: 1 },
 		{ link: '/music/suite-1.mp3', chance: 0 },
 		{ link: '/music/suite-2.mp3', chance: 0 },
@@ -113,71 +155,68 @@ export function Home() {
 
 	const audioRef = useRef<HTMLAudioElement | null>(null)
 	const currentTrackRef = useRef<string | undefined>(undefined)
+	const isPlayingRef = useRef(false)
 
 	const playNext = useCallback(() => {
+		if (!audioRef.current || isPlayingRef.current) return
+
 		const track = pickTrack(playlist, currentTrackRef.current)
 		currentTrackRef.current = track
-		if (audioRef.current) {
-			audioRef.current.volume = 0.1
-			audioRef.current.src = track
-			console.log(track)
-			audioRef.current.play().catch(console.error)
-		}
+
+		isPlayingRef.current = true
+
+		audioRef.current.src = track
+		audioRef.current.volume = 0.1
+
+		audioRef.current
+			.play()
+			.catch(console.error)
+			.finally(() => {
+				isPlayingRef.current = false
+			})
 	}, [])
 
 	return (
 		<main className='app-main'>
-			<div className='app-container'>
-				{showIntro && (
-					<div className='intro-overlay'>
-						<video
-							className='intro-video'
-							src='/video-startup.mp4'
-							autoPlay
-							playsInline
-							onEnded={() => {
-								setShowIntro(false)
-								playNext()
-							}}
-						/>
-					</div>
-				)}
-				<audio ref={audioRef} onEnded={playNext} />
-				<div className='page-header'>
-					<h1 className='page-title'>Daily Quests</h1>
-					{status !== 'initializing' && totalCount > 0 && (
-						<span className='page-counter'>
-							{completedCount} / {totalCount}
-						</span>
-					)}
+			{showIntro && (
+				<div className='intro-overlay'>
+					<video
+						ref={introRef}
+						className='intro-video'
+						src='/video-startup.mp4'
+						autoPlay
+						playsInline
+						onEnded={() => {
+							setShowIntro(false)
+							handleIntroEnd()
+						}}
+					/>
 				</div>
-
-				{status !== 'initializing' && totalCount > 0 && (
-					<div className='progress-track' role='progressbar' aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-						<div className={allDone ? 'progress-fill progress-fill-done' : 'progress-fill'} style={{ width: `${progress}%` }} />
-					</div>
-				)}
-
-				{status === 'initializing' && (
-					<div className='state'>
-						<div className='spinner' />
-						<p>Loading your quests…</p>
-					</div>
-				)}
-
-				{status === 'error' && (
-					<div className='state'>
-						<p className='state-error'>{error}</p>
-						<button className='retry-btn' onClick={loadQuests}>
-							Retry
-						</button>
-					</div>
-				)}
+			)}
+			<audio ref={audioRef} onEnded={playNext} />
+			<audio ref={bgFirstPartAudioRef} src='/bg/bg-part-1-audio.mp3' />
+			<div className='bg'>
+				<video ref={bgFirstPartVideoRef} src='/bg/bg-part-1.mp4' playsInline muted onEnded={handleBgPart1End} style={{ display: bgPart === 'first' ? 'block' : 'none' }} />
+				<video ref={bgSecondPartVideoRef} src='/bg/bg-part-2.mp4' playsInline loop muted style={{ display: bgPart === 'second' ? 'block' : 'none' }} />
+			</div>
+			<div className='app-container'>
+				<div className='page-header'>
+					<h1 className='page-title' data-text='QUEST INFO'>
+						QUEST INFO
+					</h1>
+				</div>
 
 				{status !== 'initializing' && quests.length > 0 && (
 					<ul className='quest-list'>
 						{quests.map((quest) => (
 							<li key={quest.id} className={['quest-item', quest.completed ? 'quest-item-completed' : '', completingId === quest.id ? 'quest-item-completing' : ''].join(' ').trim()}>
+								<div className='quest-info'>
+									<span className='quest-text'>{quest.text}</span>
+									<span className='quest-amount'>
+										[{quest.completed ? quest.amount : 0}/{quest.amount}
+										{quest.metric}]
+									</span>
+								</div>
 								<button
 									className='checkbox-btn'
 									onClick={() => handleComplete(quest)}
@@ -186,7 +225,7 @@ export function Home() {
 								>
 									<span className={quest.completed ? 'checkbox-box checkbox-box-checked' : 'checkbox-box'} aria-hidden='true'>
 										{completingId === quest.id ? (
-											<span className='mini-spinner' />
+											<span />
 										) : quest.completed ? (
 											<svg width='12' height='12' viewBox='0 0 12 12' fill='none'>
 												<path d='M2 6l3 3 5-5' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
@@ -194,27 +233,9 @@ export function Home() {
 										) : null}
 									</span>
 								</button>
-
-								<div className='quest-info'>
-									<span className='quest-text'>{quest.text}</span>
-									<span className='quest-amount'>{quest.amount}</span>
-								</div>
 							</li>
 						))}
 					</ul>
-				)}
-
-				{allDone && (
-					<div className='all-done'>
-						<span className='all-done-icon'>✦</span>
-						<p className='all-done-text'>All quests complete. Day secured.</p>
-					</div>
-				)}
-
-				{status === 'idle' && quests.length === 0 && (
-					<div className='state'>
-						<p>No quests found.</p>
-					</div>
 				)}
 			</div>
 		</main>
