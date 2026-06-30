@@ -5,6 +5,23 @@ $color-white: #edf4fc;
 $color-green-check: #18dd99;
 $color-text: #eef2f6;
 $color-bg: #02080f;
+$font-caros: 'Caros';
+
+@font-face {
+	font-family: 'Caros';
+	src: url('./fonts/caros/CarosSoftLight.woff2');
+	font-display: swap;
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Caros';
+	src: url('./fonts/caros/CarosSoftBold.woff2');
+	font-display: swap;
+	font-weight: 700;
+	font-style: normal;
+}
 
 // ── Reset ────────────────────────────────────────────────────────────────────
 
@@ -72,12 +89,14 @@ button {
 	height: 100vh;
 }
 
-@media (prefers-reduced-motion: reduce) {
-	*,
-	*::before,
-	*::after {
-		animation-duration: 0.01ms !important;
-		transition-duration: 0.01ms !important;
+@keyframes pulseOpacity {
+	0%,
+	100% {
+		opacity: 0.95;
+	}
+
+	50% {
+		opacity: 1;
 	}
 }
 
@@ -87,6 +106,7 @@ button {
 	letter-spacing: 0.05em;
 	line-height: 2.2em;
 	font-size: 18px;
+	animation: pulseOpacity 0.2s linear infinite;
 	// text-shadow:
 	// 	0 0 0.06em #eef2f6,
 	// 	0 0 0.18em #c0e8ff,
@@ -136,7 +156,7 @@ button {
 	align-items: center;
 	flex-direction: column;
 	height: 100%;
-	padding: 50px 10px 80px;
+	padding: 80px 10px 120px;
 
 	video {
 		height: 100%;
@@ -171,6 +191,8 @@ button {
 
 .page-title {
 	position: relative;
+	animation: pulseOpacity 0.2s linear infinite;
+
 	font-size: 42px;
 	font-weight: 700;
 	letter-spacing: 0.2em;
@@ -209,11 +231,7 @@ button {
 .quest-item {
 	display: flex;
 	align-items: center;
-	gap: 1rem;
-	border-radius: 12px;
-	transition:
-		border-color 150ms ease,
-		opacity 150ms ease;
+	gap: 10px;
 }
 
 // ── Checkbox ──────────────────────────────────────────────────────────────────
@@ -223,42 +241,22 @@ button {
 	padding: 0;
 	background: none;
 	border: none;
+	animation: pulseOpacity 0.2s linear infinite;
 	cursor: pointer;
+
+	svg {
+		position: relative;
+		top: 1px;
+		width: 22px;
+		height: 22px;
+		// filter: drop-shadow(0 0 0.06em #eef2f6) drop-shadow(0 0 0.18em #c0e8ff) drop-shadow(0 0 0.4em #7ec8f8) drop-shadow(0 0 0.8em #3fa9f5) drop-shadow(0.024em 0 rgba(0, 150, 255, 0.6));
+		filter: drop-shadow(0 0 0.03em #eef2f6) drop-shadow(0 0 0.08em #c0e8ff) drop-shadow(0 0 0.2em #3fa9f5);
+	}
 }
 
 .checkbox-btn:disabled {
 	cursor: default;
 }
-
-.checkbox-btn:focus-visible .checkbox-box {
-	outline: 2px solid #6366f1;
-	outline-offset: 2px;
-	border-radius: 4px;
-}
-
-.checkbox-box {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 22px;
-	height: 22px;
-	border: 1.5px solid #2a2a32;
-	border-radius: 4px;
-	background-color: transparent;
-	color: #fff;
-	transition: all 150ms ease;
-}
-
-.checkbox-btn:not(:disabled):hover .checkbox-box {
-	border-color: #6366f1;
-	background-color: rgba(99, 102, 241, 0.12);
-}
-
-.checkbox-box-checked {
-	border-color: #22c55e;
-	background-color: #22c55e;
-}
-
 // ── Quest info ────────────────────────────────────────────────────────────────
 
 .quest-info {
@@ -272,6 +270,12 @@ button {
 
 .quest-text {
 	font-size: 18px;
+}
+
+.quest-amount {
+	.caros {
+		font-family: $font-caros;
+	}
 }
 
 // ── intro ──────────────────────────────────────────────────────────────────
@@ -300,6 +304,7 @@ button {
 }
 
 .timer {
+	animation: pulseOpacity 0.2s linear infinite;
 	margin-top: 50px;
 	display: flex;
 	justify-content: center;
@@ -309,5 +314,86 @@ button {
 		width: 110px;
 		height: 110px;
 		filter: drop-shadow(0.024em 0 rgba(0, 150, 255, 0.6));
+	}
+}
+
+.hidden-btn {
+	position: fixed;
+	opacity: 0;
+	width: 100px;
+	height: 100px;
+	z-index: 10;
+
+	&_topleft {
+		top: 0;
+		left: 0;
+	}
+
+	&_topright {
+		top: 0;
+		right: 0;
+	}
+}
+
+.profile {
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		max-width: 500px;
+
+		svg {
+			position: relative;
+			top: 1px;
+			width: 22px;
+			height: 22px;
+			// filter: drop-shadow(0 0 0.06em #eef2f6) drop-shadow(0 0 0.18em #c0e8ff) drop-shadow(0 0 0.4em #7ec8f8) drop-shadow(0 0 0.8em #3fa9f5) drop-shadow(0.024em 0 rgba(0, 150, 255, 0.6));
+			filter: drop-shadow(0 0 0.03em #eef2f6) drop-shadow(0 0 0.08em #c0e8ff) drop-shadow(0 0 0.2em #3fa9f5);
+		}
+	}
+
+	&__title {
+		font-family: $font-caros;
+		font-size: 60px;
+	}
+}
+
+@media (max-width: 767px) {
+	.hidden-btn {
+		width: 40px;
+		height: 40px;
+	}
+
+	.bg {
+		padding: 0;
+
+		video {
+			width: 100%;
+			object-fit: cover;
+		}
+	}
+
+	.page-title {
+		margin-top: 50px;
+		margin-bottom: 30px;
+		transform: scale(0.8);
+	}
+
+	.warning {
+		font-size: 18px;
+		margin-top: 30px;
+	}
+
+	.quest-list {
+		padding: 0 20px;
+	}
+
+	.timer {
+		margin-top: 35px;
+
+		svg {
+			width: 100px;
+			height: 100px;
+		}
 	}
 }

@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import type { Quest, Reset } from '@/types'
+import type { Day, Quest, Reset } from '@/types'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -92,4 +92,12 @@ export async function runDailyResetIfNeeded(): Promise<void> {
 
 	// ── Reset all quests to incomplete ────────────────────────────────────────
 	await resetAllQuests()
+}
+
+export async function fetchDays(): Promise<Day[]> {
+	const { data, error } = await supabase.from('days').select('*').order('date', { ascending: false })
+
+	if (error) throw error
+
+	return data as Day[]
 }

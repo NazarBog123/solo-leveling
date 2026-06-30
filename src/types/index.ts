@@ -20,3 +20,11 @@ export interface Reset {
 	date: string
 	created_at: string
 }
+
+export interface Day {
+	id: number
+	date: string
+	completed: boolean
+	quests: string
+	created_at: string
+}
