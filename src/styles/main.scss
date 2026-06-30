@@ -155,10 +155,10 @@ button {
 	flex-direction: column;
 	justify-content: center;
 	max-width: 460px;
-	// transition:
-	// 	max-height 0.5s ease,
-	// 	padding 0.5s ease;
-	// transition-delay: 0.45s;
+	transition:
+		max-height 0.5s ease,
+		padding 0.5s ease;
+	transition-delay: 0.45s;
 	max-height: 0;
 	overflow: hidden;
 	height: 100vh;
