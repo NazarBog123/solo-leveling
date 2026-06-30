@@ -140,6 +140,9 @@ button {
 
 	video {
 		height: 100%;
+		transform: translateZ(0);
+		will-change: transform;
+		backface-visibility: hidden;
 	}
 }
 
@@ -153,14 +156,15 @@ button {
 	justify-content: center;
 	max-width: 460px;
 	transition:
-		height 0.5s ease,
+		max-height 0.5s ease,
 		padding 0.5s ease;
 	transition-delay: 0.45s;
-	height: 0;
+	max-height: 0;
 	overflow: hidden;
+	height: 100vh;
 
 	&_show {
-		height: 100vh;
+		max-height: 100vh;
 		padding: 20px;
 	}
 }

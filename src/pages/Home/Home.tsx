@@ -73,6 +73,7 @@ export function Home() {
 		setBgPart('second')
 		if (video) {
 			video.currentTime = 0
+			video.playbackRate = 0.9
 			try {
 				await video.play()
 			} catch (e) {
