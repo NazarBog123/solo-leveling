@@ -18,6 +18,7 @@ $color-bg: #02080f;
 
 html {
 	font-size: 100%;
+	overflow: hidden;
 	-webkit-text-size-adjust: 100%;
 }
 
@@ -25,6 +26,7 @@ body {
 	font-family: 'Lato', sans-serif;
 	font-size: 18px;
 	color: $color-text;
+	overflow: hidden;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -66,7 +68,8 @@ button {
 }
 
 #root {
-	min-height: 100vh;
+	overflow: hidden;
+	height: 100vh;
 }
 
 @media (prefers-reduced-motion: reduce) {
