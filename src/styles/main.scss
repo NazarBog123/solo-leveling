@@ -3,6 +3,7 @@
 $color-red: #c11f46;
 $color-white: #edf4fc;
 $color-green-check: #18dd99;
+$color-text: #eef2f6;
 
 // ── Reset ────────────────────────────────────────────────────────────────────
 
@@ -23,7 +24,7 @@ body {
 	font-family: 'Lato', sans-serif;
 	font-size: 1rem;
 	line-height: 1.6em;
-	color: #f1f1f3;
+	color: $color-text;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -48,7 +49,6 @@ h3,
 h4,
 h5,
 h6 {
-	text-transform: uppercase;
 	overflow-wrap: break-word;
 }
 a {
@@ -79,6 +79,43 @@ button {
 }
 
 // ── App ──────────────────────────────────────────────────────────────────────
+
+.glow-text {
+	letter-spacing: 0.05em;
+	line-height: 2.2em;
+	font-size: 18px;
+	// text-shadow:
+	// 	0 0 0.06em #eef2f6,
+	// 	0 0 0.18em #c0e8ff,
+	// 	0 0 0.4em #7ec8f8,
+	// 	0 0 0.8em #3fa9f5,
+	// 	0 0 1.3em #1a7fd4;
+	text-shadow:
+		0 0 0.06em #eef2f6,
+		0 0 0.18em #c0e8ff,
+		0 0 0.4em #7ec8f8,
+		0 0 0.8em #3fa9f5;
+	filter: drop-shadow(0.024em 0 rgba(0, 150, 255, 0.6));
+	word-spacing: 0.2em;
+	font-weight: 500;
+	user-select: none;
+
+	strong {
+		font-weight: 700;
+		position: relative;
+		top: 1px;
+	}
+}
+
+.red {
+	color: $color-red;
+	text-shadow:
+		0 0 0.06em #c11f46,
+		0 0 0.18em #8c1633,
+		0 0 0.4em #5c0e21,
+		0 0 0.8em #2e0710;
+	filter: drop-shadow(0.024em 0 rgba(120, 10, 30, 0.6));
+}
 
 .app-main {
 	min-height: 100vh;
@@ -127,13 +164,23 @@ button {
 	font-size: 42px;
 	font-weight: 700;
 	letter-spacing: 0.2em;
-	color: #eef2f6;
+	user-select: none;
 	text-shadow:
-		0 0 4px #eef2f6,
-		0 0 12px #c0e8ff,
-		0 0 28px #7ec8f8,
-		0 0 55px #3fa9f5,
-		0 0 90px #1a7fd4;
+		0 0 0.095em #eef2f6,
+		0 0 0.286em #c0e8ff,
+		0 0 0.667em #7ec8f8,
+		0 0 1.31em #3fa9f5,
+		0 0 2.143em #1a7fd4;
+	filter: drop-shadow(0.024em 0 rgba(0, 150, 255, 0.6));
+
+	// ! pixel values
+	// text-shadow:
+	// 	0 0 4px #eef2f6,
+	// 	0 0 12px #c0e8ff,
+	// 	0 0 28px #7ec8f8,
+	// 	0 0 55px #3fa9f5,
+	// 	0 0 90px #1a7fd4;
+	// filter: drop-shadow(1px 0 rgba(0, 150, 255, 0.6));
 
 	// ! very interesting look up into this effect later, it's called chromatic-aberration
 	// filter: drop-shadow(-2px 0 rgba(255, 0, 0, 0.6)) drop-shadow(2px 0 rgba(0, 150, 255, 0.6));
@@ -144,7 +191,7 @@ button {
 .quest-list {
 	display: flex;
 	flex-direction: column;
-	gap: 26px;
+	gap: 10px;
 }
 
 .quest-item {
@@ -207,18 +254,12 @@ button {
 	align-items: baseline;
 	justify-content: space-between;
 	flex: 1;
-	gap: 0.75rem;
+	gap: 20px;
 	min-width: 0;
 }
 
 .quest-text {
-	font-size: 1rem;
-	color: #f1f1f3;
-	font-weight: 500;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	transition: color 150ms ease;
+	font-size: 18px;
 }
 
 // ── intro ──────────────────────────────────────────────────────────────────
@@ -237,4 +278,20 @@ button {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+.warning {
+	font-size: 20px;
+	margin: 80px auto 0;
+	font-weight: 400;
+	max-width: fit-content;
+}
+
+.timer {
+	margin-top: 40px;
+
+	svg {
+		width: 120px;
+		height: 120px;
+	}
 }
