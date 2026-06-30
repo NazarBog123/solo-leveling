@@ -4,7 +4,8 @@ const path = require('path')
 function createWindow() {
 	const win = new BrowserWindow({
 		frame: false,
-		show: true,
+		show: false,
+		backgroundColor: '#02080f',
 		icon: path.join(__dirname, 'favicon.ico'),
 	})
 
