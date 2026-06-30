@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { fetchQuests, markQuestCompleted, runDailyResetIfNeeded } from '@/services/questService'
 import type { Quest } from '@/types'
-import Timer from './timer'
+import Timer from './Timer'
 
 type Status = 'initializing' | 'loading' | 'idle' | 'completing' | 'error'
 
