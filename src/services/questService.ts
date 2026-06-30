@@ -14,7 +14,7 @@ export function todayLocalDate(): string {
 
 /** Formats quests array into the days.quests column string */
 function formatQuestsString(quests: Quest[]): string {
-	return quests.map((q, i) => `${i + 1}. ${q.text} - ${q.amount} ${q.completed}`).join('; ')
+	return quests.map((q, i) => `${i + 1}. ${q.text} - ${q.amount}${q.metric} ${q.completed}`).join('; ')
 }
 
 // ─── Quest queries ───────────────────────────────────────────────────────────
