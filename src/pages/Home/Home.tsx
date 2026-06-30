@@ -279,7 +279,7 @@ export function Home() {
 												))}
 											</span>
 											<span className={`quest-amount glow-text ${!lastDayCompleted && quest.text == 'Running' && !quest.completed ? 'red' : ''}`}>
-												[<span className='caros'>{quest.completed ? quest.amount : 0}</span>/
+												[<span className='caros'>{quest.completed ? (!lastDayCompleted && quest.text == 'Running' ? +quest.amount * 2 : quest.amount) : 0}</span>/
 												<span className='caros'>{!lastDayCompleted && quest.text == 'Running' ? +quest.amount * 2 : quest.amount}</span>
 												{quest.metric}]
 											</span>
